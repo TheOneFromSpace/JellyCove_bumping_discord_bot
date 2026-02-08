@@ -19,7 +19,7 @@
   "homepage": "https://github.com/TheOneFromSpace/JellyCove_bumping_discord_bot#readme",
   "dependencies": {
     "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.2.4",
     "mariadb": "^3.4.5"
   }
 }
