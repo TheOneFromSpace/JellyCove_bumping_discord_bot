@@ -27,3 +27,7 @@ args = "node src/index.js"
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[deployment]
+run = ["sh", "-c", "node src/index.js"]
+deploymentTarget = "cloudrun"
