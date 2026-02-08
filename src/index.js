@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./server'); // makes an server to keep the bot on 24/7
 const fs = require('fs');
 const path = require('path');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
