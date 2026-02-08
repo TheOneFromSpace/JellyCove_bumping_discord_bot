@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { leaderboards } = require('../data/bumps');
+const { getLeaderboard } = require('../data/bumps');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,18 +7,14 @@ module.exports = {
     .setDescription('Show the bump leaderboard'),
 
   async execute(interaction) {
-    const board = leaderboards.get(interaction.guildId);
+    const rows = await getLeaderboard(interaction.guildId, 10);
 
-    if (!board || board.size === 0) {
+    if (!rows.length) {
       return interaction.reply('No bumps recorded yet!');
     }
 
-    const sorted = [...board.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
-
-    const text = sorted
-      .map(([id, count], i) => `**${i + 1}.** <@${id}> — ${count}`)
+    const text = rows
+      .map((row, i) => `**${i + 1}.** <@${row.user_id}> — ${row.bumps}`)
       .join('\n');
 
     await interaction.reply(`🏆 **Bump Leaderboard**\n\n${text}`);
