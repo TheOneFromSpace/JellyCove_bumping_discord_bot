@@ -1,7 +1,10 @@
 const { Events } = require('discord.js');
-const { pendingBumps, leaderboards } = require('../data/bumps');
+const { addBumps, getBumps } = require('../data/bumps');
 
 const DISBOARD_BOT_ID = '302050872383242240';
+
+// In-memory, short-lived tracking, can be checked to be deleted next patch
+const pendingBumps = new Map();
 
 module.exports = {
   name: Events.MessageCreate,
@@ -11,7 +14,7 @@ module.exports = {
 
     const content = message.content.toLowerCase();
 
-    // DISBOARD prompt
+    // DISBOARD bump prompt?
     if (content.includes('please bump this server')) {
       const user = message.mentions.users.first();
       if (user) {
@@ -20,22 +23,18 @@ module.exports = {
       return;
     }
 
-    // Bump success
+    // DISBOARD bump success, base of the entire script
     if (content.includes('bump done')) {
       const userId = pendingBumps.get(message.guildId);
       if (!userId) return;
 
-      if (!leaderboards.has(message.guildId)) {
-        leaderboards.set(message.guildId, new Map());
-      }
-
-      const board = leaderboards.get(message.guildId);
-      board.set(userId, (board.get(userId) || 0) + 1);
+      await addBumps(message.guildId, userId, 1);
+      const total = await getBumps(message.guildId, userId);
 
       pendingBumps.delete(message.guildId);
 
       await message.channel.send(
-        `🚀 <@${userId}> bumped the server!\nThey now have **${board.get(userId)}** bumps.`
+        `<@${userId}> bumped the server!\nThey now have **${total}** bumps.`
       );
     }
   },
