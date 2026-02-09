@@ -118,4 +118,4 @@ Treat all secret values as **confidential**.
 
 ## 🧪 Status
 
-Actively used in the JellyCove Discord server.
+Starting phases in the JellyCove Discord server.
