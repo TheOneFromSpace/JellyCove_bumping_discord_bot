@@ -3,39 +3,41 @@ const { addBumps, getBumps } = require('../data/bumps');
 
 const DISBOARD_BOT_ID = '302050872383242240';
 
-// In-memory, short-lived tracking, can be checked to be deleted next patch
+// Short-lived memory to link bump → user
 const pendingBumps = new Map();
 
 module.exports = {
   name: Events.MessageCreate,
   async execute(message) {
+    // Must be in a guild
     if (!message.guild) return;
+
+    // Must be DISBOARD
     if (message.author.id !== DISBOARD_BOT_ID) return;
 
-    const content = message.content.toLowerCase();
+    // Must contain an embed
+    if (!message.embeds.length) return;
 
-    // DISBOARD bump prompt?
-    if (content.includes('please bump this server')) {
-      const user = message.mentions.users.first();
-      if (user) {
-        pendingBumps.set(message.guildId, user.id);
-      }
-      return;
-    }
+    // Get embed
+    const embed = message.embeds[0];
+    const description = embed.description?.toLowerCase() ?? '';
 
-    // DISBOARD bump success, base of the entire script
-    if (content.includes('bump done')) {
-      const userId = pendingBumps.get(message.guildId);
-      if (!userId) return;
+    //  Detect bump
+    if (!description.includes('bump done')) return;
 
-      await addBumps(message.guildId, userId, 1);
-      const total = await getBumps(message.guildId, userId);
+    const userId = pendingBumps.get(message.guildId);
+    if (!userId) return;
 
-      pendingBumps.delete(message.guildId);
+    await addBumps(message.guildId, userId, 1);
+    const total = await getBumps(message.guildId, userId);
 
-      await message.channel.send(
-        `<@${userId}> bumped the server!\nThey now have **${total}** bumps.`
-      );
-    }
+    pendingBumps.delete(message.guildId);
+
+    await message.channel.send(
+      `🚀 <@${userId}> bumped the server!\nThey now have **${total}** bumps.`
+    );
   },
 };
+
+// Export map so interaction handler can set it
+module.exports.pendingBumps = pendingBumps;
