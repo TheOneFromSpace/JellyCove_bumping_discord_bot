@@ -9,8 +9,8 @@ A Discord bot that tracks **Disboard bumps** made in the **JellyCove** Discord s
 
 ## 📦 Version Control
 
-* **Current version:** `v1.0.4d`
-* **Release date:** **February 2, 2026**
+* **Current version:** `v1.0 final release`
+* **Release date:** **February 18, 2026**
 
 ---
 
