@@ -17,6 +17,9 @@ module.exports = {
       .map((row, i) => `**${i + 1}.** <@${row.user_id}> — ${row.bumps}`)
       .join('\n');
 
-    await interaction.reply(`🏆 **Bump Leaderboard**\n\n${text}`);
+    await interaction.reply({
+      content: `🏆 **Bump Leaderboard**\n\n${text}`,
+      allowedMentions: { users: [] },
+    });
   },
 };

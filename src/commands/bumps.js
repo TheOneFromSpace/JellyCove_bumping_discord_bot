@@ -18,6 +18,9 @@ module.exports = {
 
     const count = await getBumps(guildId, user.id);
 
-    await interaction.reply(`<@${user.id}> has **${count}** bumps.`);
+    await interaction.reply({
+      content: `<@${user.id}> has **${count}** bumps.`,
+      allowedMentions: { users: [] },
+    });
   },
 };
